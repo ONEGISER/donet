@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,10 @@ namespace BlazorServer {
         public static IHostBuilder CreateHostBuilder (string[] args) =>
             Host.CreateDefaultBuilder (args)
             .ConfigureWebHostDefaults (webBuilder => {
+                var  config  =  new  ConfigurationBuilder ()
+                    .SetBasePath (Directory.GetCurrentDirectory ())
+                    .AddJsonFile ("hosting.json",  optional :  true) .Build ();
+                webBuilder.UseConfiguration (config);
                 webBuilder.UseStartup<Startup> ();
             });
     }
