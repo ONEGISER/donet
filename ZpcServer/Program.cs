@@ -19,9 +19,40 @@ namespace ZpcServer {
             .ConfigureWebHostDefaults (webBuilder => {
                 var  config  =  new  ConfigurationBuilder ()
                     .SetBasePath (Directory.GetCurrentDirectory ())
-                    .AddJsonFile ("hosting.json",  optional :  true) .Build ();
+                    .AddJsonFile ("appsetting.json",  optional :  true) 
+                    .AddJsonFile ("hosting.json",  optional :  true) 
+                    .AddCommandLine (args)
+                    .Build ();
                 webBuilder.UseConfiguration (config);
                 webBuilder.UseStartup<Startup> ();
+                Program.SetServerInfo (config);
             });
+        public static void SetServerInfo (IConfiguration config) {
+            String ServerNameKey = "ServerName";
+            String ServerAddressKey = "urls";
+            String serverName = config.GetSection (ServerNameKey)?.Value;
+            String serverAddress = config.GetSection (ServerAddressKey)?.Value;
+            String serverPort = "";
+            if (!string.IsNullOrEmpty (serverAddress)) {
+                string[] arr;
+                if (serverAddress.IndexOf (";") > -1) {
+                    arr = serverAddress.Split (";");
+                    if (arr.Length > 0) {
+                        serverAddress = arr[arr.Length - 1];
+                        if (serverAddress.IndexOf (":") > -1) {
+                            arr = serverAddress.Split (":");
+                            serverPort = arr[arr.Length - 1];
+                        }
+                    }
+                } else {
+                    if (serverAddress.IndexOf (":") > -1) {
+                        arr = serverAddress.Split (":");
+                        serverPort = arr[arr.Length - 1];
+                    }
+                }
+            }
+            serverName = string.IsNullOrEmpty (serverName) ? "" : serverName;
+            Console.Title = $"{serverName}({serverPort})";
+        }
     }
 }

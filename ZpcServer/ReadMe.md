@@ -5,5 +5,9 @@
 2. 在 Visual Studio Code 中加载 MvcMovie.csproj 项目文件
 `code -r MvcMovie`
 
-3. 来信任 HTTPS 开发证书
+3. 信任 HTTPS 开发证书
 `dotnet dev-certs https --trust`
+
+4. 运行
+
+`dotnet watch run 或 dotnet run`
