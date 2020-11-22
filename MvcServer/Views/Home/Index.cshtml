@@ -1,8 +1,45 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <input type="file" id="upload-photo" />
+    <img id="upload-img" src="" />
+    <img id="handle-img" src="" />
+
 </div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $("#upload-photo").change(function () {
+        var file = this.files[0];
+        if (window.FileReader) {
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = function (e) {
+                var base64 = e.target.result
+                $("#upload-img").attr("src", base64);
+                var _base64 = base64;
+                var str = "";
+                var splitStr = ",";
+                if (base64.indexOf(splitStr) > 0) {
+                    var arr = base64.split(splitStr);
+                    str = arr[0];
+                    _base64 = arr[1];
+                }
+
+                $.ajax({
+                    url: "/api/BaiDuAI/selfie_anime",
+                    data: {
+                        base64: _base64
+                    },
+                    type: "post",
+                    success: (result) => {
+                        if (result) {
+                            var obj = JSON.parse(result)
+                            $("#handle-img").attr("src", str + splitStr + obj.image);
+                        }
+                    }
+                })
+            };
+        }
+    })
+</script>

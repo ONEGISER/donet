@@ -5,7 +5,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-namespace Common.Utils {
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+namespace MvcServer.Utils {
     public class Http {
         public async Task<Object> RequestGet (string _url) {
             var uri = new Uri (_url);
